@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
+import { ProjectModule } from './projects/projects.module';
+import { TracksModule } from './tracks/tracks.module';
 
 @Module({
   imports: [
@@ -11,6 +13,8 @@ import { UsersModule } from './users/users.module';
       isGlobal: true,
     }),
     UsersModule,
+    ProjectModule,
+    TracksModule,
 
     TypeOrmModule.forRoot({
       type: 'postgres',
