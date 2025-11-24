@@ -1,9 +1,11 @@
-import { Controller, Post, Body, Get, Query, Param, Put, Delete } from "@nestjs/common";
+import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Request } from '@nestjs/common';
 import { ProjectsService } from "./projects.service";
 import { Project } from "src/entities/project.entity";
 import { error } from "console";
+import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 
 @Controller('projects')
+@UseGuards(JwtAuthGuard)
 export class ProjectsController {
     constructor(private readonly projectsService: ProjectsService) {}
 
@@ -11,29 +13,29 @@ export class ProjectsController {
     async create(
         @Body() createProjectDto: {
             name: string;
-            userId: string;
             description?: string;
             dawType?: string;
             dawProjectPath?: string;
         },
+        @Request() req,
     ): Promise<Project> {
         return this.projectsService.create(
             createProjectDto.name,
-            createProjectDto.userId,
+            req.user.userId,
             createProjectDto.description,
             createProjectDto.dawType,
             createProjectDto.dawProjectPath,
         );
     }
     @Get()
-    async findAll(@Query('userId') userId: string): Promise<Project[]> {
-        return this.projectsService.findByUser(userId);
+    async findAll(@Request() req): Promise<Project[]> {
+        return this.projectsService.findByUser(req.user.userId);
     }
     @Get(':id')
-    async findOne(@Param('id') id: string, @Query('userId') userId: string): Promise<Project> {
-        const project = await this.projectsService.findOne(id, userId);
+    async findOne(@Param('id') id: string, @Request() req): Promise<Project> {
+        const project = await this.projectsService.findOne(id, req.user.userId);
         if (!project) {
-            throw new error('Project Not Found..')
+            throw new error('Project Not Found')
         }
         return project;
     }
@@ -41,13 +43,13 @@ export class ProjectsController {
     @Put('id')
     async update(
         @Param('id') id: string,
-        @Query('userId') userId: string,
+        @Request() req,
         @Body() updateProjectDto: Partial<Project>,
     ): Promise<Project> {
-        return this.projectsService.update(id, userId, updateProjectDto)
+        return this.projectsService.update(id, req.user.userId, updateProjectDto)
     }
     @Delete('id')
-    async delete(@Param('id') id: string, @Query('userId') userId: string): Promise<void> {
-        return this.projectsService.delete(id, userId);
+    async delete(@Param('id') id: string, @Request() req): Promise<void> {
+        return this.projectsService.delete(id, req.user.userId);
     }
 }

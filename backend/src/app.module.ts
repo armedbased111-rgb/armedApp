@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { ProjectModule } from './projects/projects.module';
 import { TracksModule } from './tracks/tracks.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { TracksModule } from './tracks/tracks.module';
     UsersModule,
     ProjectModule,
     TracksModule,
+    AuthModule,
 
     TypeOrmModule.forRoot({
       type: 'postgres',
