@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { Button } from '@/components/ui/button';
 
 export default function Home() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -21,8 +22,8 @@ export default function Home() {
         <div>
           <p>Connectez-vous pour accéder à vos projets</p>
           <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-            <Link to="/login">Connexion</Link>
-            <Link to="/register">Inscription</Link>
+            <Button><Link to="/login">Connexion</Link></Button>
+           <Button><Link to="/register">Inscription</Link></Button>
           </div>
         </div>
       )}

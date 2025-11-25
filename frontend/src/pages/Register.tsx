@@ -1,20 +1,23 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { RegisterForm } from '@/components/register-form';
 
 export default function Register() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
     setLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+    const name = formData.get('name') as string;
 
     try {
       await register(email, password, name || undefined);
@@ -27,52 +30,21 @@ export default function Register() {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '2rem auto', padding: '2rem' }}>
-      <h2>Inscription</h2>
-      {error && <div style={{ color: 'red', marginBottom: '1rem' }}>{error}</div>}
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '1rem' }}>
-          <label>
-            Nom (optionnel):
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              style={{ width: '100%', padding: '0.5rem', marginTop: '0.5rem' }}
-            />
-          </label>
-        </div>
-        <div style={{ marginBottom: '1rem' }}>
-          <label>
-            Email:
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              style={{ width: '100%', padding: '0.5rem', marginTop: '0.5rem' }}
-            />
-          </label>
-        </div>
-        <div style={{ marginBottom: '1rem' }}>
-          <label>
-            Mot de passe:
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              style={{ width: '100%', padding: '0.5rem', marginTop: '0.5rem' }}
-            />
-          </label>
-        </div>
-        <button type="submit" disabled={loading} style={{ width: '100%', padding: '0.5rem' }}>
-          {loading ? 'Inscription...' : 'S\'inscrire'}
-        </button>
-      </form>
-      <p style={{ marginTop: '1rem', textAlign: 'center' }}>
-        Déjà un compte ? <Link to="/login">Se connecter</Link>
-      </p>
+    <div className="flex min-h-screen items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        {error && (
+          <div className="mb-4 rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+            {error}
+          </div>
+        )}
+        <RegisterForm onSubmit={handleSubmit} />
+        <p className="mt-4 text-center text-sm text-muted-foreground">
+          Déjà un compte ?{' '}
+          <Link to="/login" className="underline underline-offset-4 hover:text-primary">
+            Se connecter
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }
