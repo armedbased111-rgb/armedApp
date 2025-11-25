@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { ProjectModule } from './projects/projects.module';
 import { TracksModule } from './tracks/tracks.module';
 import { AuthModule } from './auth/auth.module';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AuthModule } from './auth/auth.module';
     ProjectModule,
     TracksModule,
     AuthModule,
+    FilesModule,
 
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -26,11 +28,9 @@ import { AuthModule } from './auth/auth.module';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
       synchronize: true, // a mettre false en prod
-      entities: [
-        __dirname + '/**/*.entity{.ts,.js}'
-      ],
-    })
-  ], 
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+    }),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

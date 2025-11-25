@@ -1,5 +1,5 @@
 import { Sidebar, SidebarBody, SidebarLink, useSidebar } from './ui/sidebar';
-import { Home, Music, Settings, LogOut, LogIn, UserPlus, Menu, X } from 'lucide-react';
+import { Home, Music, Settings, LogOut, LogIn, UserPlus, Menu, X, Upload } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -26,6 +26,11 @@ function SidebarContent() {
           label: 'Mes Projets',
           href: '/projects',
           icon: <Music className="w-5 h-5" />,
+        },
+        {
+          label: 'Upload',
+          href: '/upload',
+          icon: <Upload className="w-5 h-5" />,
         },
         {
           label: 'Paramètres',
