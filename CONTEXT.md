@@ -40,19 +40,23 @@ armedApp/
 ### Structure des Pages
 
 #### **Home (`/`) = Feed de l'Utilisateur**
-- Timeline d'activité musicale
-- Tracks récemment ajoutées par les artistes suivis
-- Découvertes et recommandations
-- Posts/updates des projets suivis
-- Nouveautés de la communauté
+- Timeline d'activité musicale ✅
+- Tracks récemment ajoutées par les artistes suivis ✅
+- Actions like/unlike sur les tracks ✅
+- Compteurs de likes et commentaires ✅
+- Dialog de connexion automatique si non connecté ✅
+- Découvertes et recommandations (à venir)
+- Posts/updates des projets suivis (à venir)
+- Nouveautés de la communauté (à venir)
 
-#### **Profil (`/profile` ou `/@username`) = Nos EP, Nos Tracks**
-- **Section Tracks** : Liste de toutes les tracks publiées
-- **Section EPs/Albums** : Projets et collections
-- **Stats** : Plays, likes, followers, following
-- **Bio** : Description, avatar, couverture
-- **Filtres** : Tracks, Albums, Playlists, Likes, Reposts
-- **Activité** : Historique des actions
+#### **Profil (`/profile/:id`) = Nos EP, Nos Tracks**
+- **Section Tracks** : Liste de toutes les tracks publiées par projet ✅
+- **Section EPs/Albums** : Projets et collections avec stats ✅
+- **Stats** : Followers, following, tracks, likes, commentaires ✅
+- **Bio** : Description, avatar, username ✅
+- **Actions** : Follow/Unfollow ✅
+- **Filtres** : Tracks, Albums, Playlists, Likes, Reposts (à venir)
+- **Activité** : Historique des actions (à venir)
 
 #### **Autres Pages Clés**
 - `/discover` : Exploration et découverte de nouveaux artistes
@@ -63,21 +67,21 @@ armedApp/
 
 ### Fonctionnalités Sociales
 
-- **Follow/Unfollow** : Suivre des artistes
-- **Likes/Favorites** : Ajouter des tracks aux favoris
-- **Reposts** : Partager des tracks
-- **Commentaires** : Commenter sur les tracks
-- **Playlists** : Créer et partager des playlists
-- **Partage** : Partager vers les réseaux sociaux
+- **Follow/Unfollow** : Suivre des artistes ✅
+- **Likes/Favorites** : Ajouter des tracks aux favoris ✅
+- **Commentaires** : Commenter sur les tracks ✅
+- **Reposts** : Partager des tracks (à venir)
+- **Playlists** : Créer et partager des playlists (à venir)
+- **Partage** : Partager vers les réseaux sociaux (à venir)
 
 ## 📊 Modèle de Données
 
 ### Entités Principales
 
 #### User (Artiste)
-- Informations de profil (nom, email, bio, avatar)
-- Statistiques (followers, following, tracks count)
-- Paramètres et préférences
+- Informations de profil (nom, email, username, bio, avatar) ✅
+- Statistiques (followers, following, tracks, likes, commentaires) ✅
+- Paramètres et préférences (à venir)
 
 #### Project (EP/Album)
 - Métadonnées (nom, description, artwork)
@@ -97,9 +101,22 @@ armedApp/
 User
   ├── Projects (1:N)
   │     └── Tracks (1:N)
-  ├── Followers (N:N)
-  ├── Following (N:N)
-  └── Likes (N:N) → Tracks
+  ├── Followers (N:N via Follow)
+  ├── Following (N:N via Follow)
+  ├── Likes (N:N via Like) → Tracks
+  └── Comments (N:N via Comment) → Tracks
+
+Follow
+  ├── follower (User)
+  └── following (User)
+
+Like
+  ├── user (User)
+  └── track (Track)
+
+Comment
+  ├── user (User)
+  └── track (Track)
 ```
 
 ## 🎨 Design & UX
@@ -122,21 +139,22 @@ User
 
 ## 🚀 Roadmap Générale
 
-### Phase 1 : V1 - Base (✅ En cours)
+### Phase 1 : V1 - Base (✅ Terminée)
 - [x] Authentification (login/register)
 - [x] Design system (shadcn/ui)
 - [x] Music player avec waveform
 - [x] Layout et navigation
-- [ ] CRUD Projects
-- [ ] CRUD Tracks
-- [ ] Upload de fichiers audio
+- [x] CRUD Projects
+- [x] CRUD Tracks
+- [x] Upload de fichiers audio
+- [x] Module Files (upload/download)
 
-### Phase 2 : V2 - Social (Feed & Profil)
-- [ ] Page Home = Feed utilisateur
-- [ ] Page Profil avec tracks/EPs
-- [ ] Système de follow/unfollow
-- [ ] Likes et favorites
-- [ ] Commentaires sur tracks
+### Phase 2 : V2 - Social (Feed & Profil) (✅ Terminée)
+- [x] Page Home = Feed utilisateur
+- [x] Page Profil avec tracks/EPs
+- [x] Système de follow/unfollow
+- [x] Likes et favorites
+- [x] Commentaires sur tracks
 - [ ] Recherche et découverte
 
 ### Phase 3 : V3 - Avancé
@@ -179,5 +197,32 @@ User
 ---
 
 **Dernière mise à jour :** Décembre 2024  
-**Version actuelle :** V1.0 (Frontend) - V1.0 (Backend)
+**Version actuelle :** V2.0 (Frontend) - V2.0 (Backend) - Phase 2 Social terminée
+
+## 📝 État Actuel du Projet
+
+### Phase 1 (V1) — ✅ Terminée
+- Authentification (login/register)
+- CRUD Projects
+- CRUD Tracks
+- Upload de fichiers audio
+- Module Files
+- Design system (shadcn/ui)
+- Music player avec waveform
+
+### Phase 2 (V2 Social) — ✅ Terminée
+- Feed utilisateur (Home)
+- Page Profile complète
+- Follow/Unfollow
+- Likes sur tracks
+- Commentaires sur tracks
+- Dialog de connexion
+- Services API complets (feed, follows, likes, comments, users)
+
+### Prochaines Étapes
+1. Composants UI pour commentaires (affichage et création)
+2. Recherche d'utilisateurs/tracks
+3. Notifications
+4. Améliorations Feed (pagination infinie, filtres)
+5. Améliorations Profile (édition, statistiques détaillées)
 

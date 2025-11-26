@@ -1,6 +1,8 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from 'src/entities/user.entity';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorators/user.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -24,5 +26,14 @@ export class UsersController {
       throw new Error('User not found');
     }
     return user;
+  }
+
+  @Get(':id/profile')
+  @UseGuards(JwtAuthGuard)
+  async getProfile(
+    @Param('id') id: string,
+    @CurrentUser() user: any,
+  ) {
+    return this.usersService.getProfile(id, user.id);
   }
 }

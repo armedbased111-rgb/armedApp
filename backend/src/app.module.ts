@@ -8,6 +8,10 @@ import { ProjectModule } from './projects/projects.module';
 import { TracksModule } from './tracks/tracks.module';
 import { AuthModule } from './auth/auth.module';
 import { FilesModule } from './files/files.module';
+import { FollowsModule } from './follows/follows.module';
+import { LikesModule } from './likes/likes.module';
+import { CommentsModule } from './comments/comments.module';
+import { FeedModule } from './feed/feed.module';
 
 @Module({
   imports: [
@@ -19,7 +23,10 @@ import { FilesModule } from './files/files.module';
     TracksModule,
     AuthModule,
     FilesModule,
-
+    FollowsModule,
+    LikesModule,
+    CommentsModule,
+    FeedModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST || 'localhost',

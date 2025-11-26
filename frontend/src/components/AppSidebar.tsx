@@ -1,7 +1,7 @@
 import { Sidebar, SidebarBody, SidebarLink, useSidebar } from './ui/sidebar';
 import { Home, Music, Settings, LogOut, LogIn, UserPlus, Menu, X, Upload } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Composant interne qui utilise useSidebar (doit être à l'intérieur du SidebarProvider)
@@ -107,7 +107,10 @@ function SidebarContent() {
       {/* Profil utilisateur */}
       {open && isAuthenticated && user && (
         <div className="px-2 py-4 border-t border-neutral-200 dark:border-neutral-700">
-          <div className={open ? "flex items-center gap-2" : "flex items-center justify-center"}>
+          <Link
+            to={`/profile/${user.id}`}
+            className={open ? "flex items-center gap-2 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-lg p-2 transition-colors" : "flex items-center justify-center"}
+          >
             <div className="w-8 h-8 rounded-full bg-neutral-300 dark:bg-neutral-600 flex items-center justify-center shrink-0">
               <span className="text-sm font-medium text-neutral-700 dark:text-neutral-200">
                 {user.name?.[0] || user.email[0].toUpperCase()}
@@ -130,7 +133,7 @@ function SidebarContent() {
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
+          </Link>
         </div>
       )}
     </div>

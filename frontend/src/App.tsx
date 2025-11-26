@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Projects from './pages/Projects';
 import Upload from './pages/Upload';
+import Profile from './pages/Profile';
 import './App.css';
 
 function AppRoutes() {
@@ -27,6 +28,7 @@ function AppRoutes() {
         <Route path="/register" element={<Register />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/upload" element={<Upload />} />
+        <Route path="/profile/:id" element={<Profile />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Layout>

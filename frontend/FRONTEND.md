@@ -15,7 +15,7 @@
 - **HTTP Client** : Fetch API (via services)
 - **Desktop** : Electron (optionnel)
 
-## ✅ État Actuel - Version 1.0
+## ✅ État Actuel - Version 2.0 (Phase 2 Social)
 
 ### Infrastructure
 
@@ -30,13 +30,16 @@
 ### Pages Implémentées
 
 #### 1. **Home (`/`)**
-- ✅ Page d'accueil avec message de bienvenue
+- ✅ **Feed utilisateur** avec tracks des artistes suivis
 - ✅ Affichage conditionnel selon l'état d'authentification
-- ✅ Liens vers connexion/inscription
-- ⚠️ **À transformer en Feed utilisateur** (V2)
+- ✅ Dialog de connexion automatique si non connecté
+- ✅ Actions like/unlike sur les tracks
+- ✅ Compteurs de likes et commentaires
+- ✅ Informations auteur (nom, avatar, projet)
 
 #### 2. **Login (`/login`)**
 - ✅ Formulaire de connexion moderne (LoginForm)
+- ✅ Design avec image à droite
 - ✅ Intégration avec AuthContext
 - ✅ Gestion des erreurs
 - ✅ Redirection après connexion
@@ -44,11 +47,21 @@
 
 #### 3. **Register (`/register`)**
 - ✅ Formulaire d'inscription moderne (RegisterForm)
+- ✅ Design avec image à droite (même style que Login)
 - ✅ Champ nom optionnel
 - ✅ Intégration avec AuthContext
 - ✅ Gestion des erreurs
 - ✅ Redirection après inscription
 - ✅ Lien vers connexion
+
+#### 4. **Profile (`/profile/:id`)**
+- ✅ Page profil utilisateur complète
+- ✅ Header avec avatar, nom, username, bio
+- ✅ Statistiques (followers, following, tracks, likes, commentaires)
+- ✅ Liste des projets avec leurs tracks
+- ✅ Stats par projet (tracks, likes, commentaires)
+- ✅ Bouton Follow/Unfollow
+- ✅ Navigation depuis la sidebar
 
 ### Composants Implémentés
 
@@ -94,6 +107,12 @@
 - ✅ Waveform
 - ✅ Sidebar
 - ✅ DropdownMenu
+- ✅ Dialog (modal/popover)
+
+#### 7. **Services API**
+- ✅ projects.ts - Service pour gérer les projets
+- ✅ tracks.ts - Service pour gérer les tracks
+- ✅ files.ts - Service pour l'upload/download de fichiers
 
 ### Services Implémentés
 
@@ -114,6 +133,42 @@
 - ✅ Service d'authentification
 - ✅ Endpoints login/register
 - ✅ Gestion des erreurs
+
+#### 4. **feed.ts**
+- ✅ Service pour récupérer le feed
+- ✅ Pagination (limit, offset)
+- ✅ Types FeedTrack et FeedResponse
+
+#### 5. **follows.ts**
+- ✅ Service pour follow/unfollow
+- ✅ Récupération des followers/following
+- ✅ Vérification du statut de suivi
+
+#### 6. **likes.ts**
+- ✅ Service pour liker/unliker
+- ✅ Récupération des likes
+- ✅ Comptage des likes
+
+#### 7. **comments.ts**
+- ✅ Service pour commenter
+- ✅ CRUD commentaires (create, update, delete)
+- ✅ Récupération des commentaires par track
+
+#### 8. **users.ts**
+- ✅ Service pour récupérer le profil utilisateur
+- ✅ Types UserProfile avec stats complètes
+
+#### 9. **projects.ts**
+- ✅ Service pour CRUD projets
+- ✅ Récupération des projets de l'utilisateur
+
+#### 10. **tracks.ts**
+- ✅ Service pour CRUD tracks
+- ✅ Récupération des tracks par projet
+
+#### 11. **files.ts**
+- ✅ Service pour upload de fichiers audio
+- ✅ Service pour téléchargement de fichiers
 
 ### Design System
 
@@ -141,77 +196,44 @@
 
 ## 🚀 Roadmap - Fonctionnalités à Implémenter
 
-### Phase 1 : V1 - Finalisation (En cours)
+### Phase 1 : V1 - Base (✅ Terminée)
+- [x] Authentification (login/register)
+- [x] Design system (shadcn/ui)
+- [x] Music player avec waveform
+- [x] Layout et navigation
+- [x] CRUD Projects
+- [x] CRUD Tracks
+- [x] Upload de fichiers audio
+- [x] Module Files (upload/download)
+- [x] Page Projects (`/projects`)
+- [x] Page Upload (`/upload`)
 
-#### 1.1 Pages Manquantes
-- [ ] Page Profile (`/profile`)
-  - [ ] Header avec avatar, bio, stats
-  - [ ] Liste des tracks publiées
-  - [ ] Liste des projets/EPs
-  - [ ] Filtres (Tracks, Albums, Playlists)
-  - [ ] Actions (Edit profile, Settings)
-
-- [ ] Page Projects (`/projects`)
-  - [ ] Liste des projets de l'utilisateur
-  - [ ] Création de projet
-  - [ ] Édition/suppression de projet
-  - [ ] Vue détail d'un projet
-
-- [ ] Page Upload (`/upload`)
-  - [ ] Formulaire d'upload de track
-  - [ ] Sélection de fichier audio
-  - [ ] Prévisualisation audio
-  - [ ] Métadonnées (nom, description, projet)
-  - [ ] Upload progress
-
-#### 1.2 Composants Manquants
-- [ ] **TrackCard** : Carte de présentation d'une track
-  - [ ] Artwork/thumbnail
-  - [ ] Titre et artiste
-  - [ ] Durée et stats (plays, likes)
-  - [ ] Actions (play, like, share)
-
-- [ ] **ProjectCard** : Carte de présentation d'un projet
-  - [ ] Artwork
-  - [ ] Titre et description
-  - [ ] Nombre de tracks
-  - [ ] Actions
-
-- [ ] **Feed** : Composant de timeline
-  - [ ] Liste de tracks récentes
-  - [ ] Activité des artistes suivis
-  - [ ] Découvertes
-
-- [ ] **ProfileHeader** : En-tête de profil
-  - [ ] Avatar et couverture
-  - [ ] Nom et bio
-  - [ ] Stats (tracks, followers, following)
-  - [ ] Boutons d'action (follow, edit)
-
-### Phase 2 : V2 - Social (Feed & Profil)
+### Phase 2 : V2 - Social (Feed & Profil) (✅ Terminée)
 
 #### 2.1 Transformation de Home en Feed
-- [ ] **Feed Timeline**
-  - [ ] Tracks récentes des artistes suivis
+- [x] **Feed Timeline**
+  - [x] Tracks récentes des artistes suivis
+  - [x] Pagination (limit, offset)
+  - [x] Stats par track (likes, commentaires)
   - [ ] Découvertes et recommandations
-  - [ ] Activité de la communauté
   - [ ] Filtres (All, Following, Discover)
 
-- [ ] **Système de Follow**
-  - [ ] Bouton follow/unfollow
-  - [ ] Liste des followers/following
+- [x] **Système de Follow**
+  - [x] Bouton follow/unfollow
+  - [x] Liste des followers/following
+  - [x] Vérification du statut de suivi
   - [ ] Suggestions de personnes à suivre
 
 #### 2.2 Page Profil Complète
-- [ ] **Section Tracks**
-  - [ ] Grille/liste de toutes les tracks
+- [x] **Section Tracks**
+  - [x] Liste de toutes les tracks par projet
+  - [x] Stats par track
   - [ ] Filtres et tri
-  - [ ] Stats par track
 
-- [ ] **Section EPs/Albums**
-  - [ ] Liste des projets
+- [x] **Section EPs/Albums**
+  - [x] Liste des projets avec stats
+  - [x] Tracks d'un projet
   - [ ] Vue détail d'un EP
-  - [ ] Tracks d'un EP
 
 - [ ] **Section Playlists**
   - [ ] Création de playlist
@@ -219,13 +241,16 @@
   - [ ] Partage de playlists
 
 #### 2.3 Interactions Sociales
-- [ ] **Likes/Favorites**
-  - [ ] Bouton like sur les tracks
+- [x] **Likes/Favorites**
+  - [x] Bouton like sur les tracks
+  - [x] Compteur de likes
+  - [x] Vérification si track likée
   - [ ] Liste des tracks likées
-  - [ ] Compteur de likes
 
-- [ ] **Commentaires**
-  - [ ] Système de commentaires sur les tracks
+- [x] **Commentaires**
+  - [x] Système de commentaires sur les tracks
+  - [x] CRUD commentaires (create, update, delete)
+  - [x] Comptage des commentaires
   - [ ] Réponses aux commentaires
   - [ ] Mentions (@username)
 
@@ -234,7 +259,7 @@
   - [ ] Liste des reposts
   - [ ] Attribution
 
-### Phase 3 : V3 - Pages Avancées
+### Phase 3 : V3 - Avancé (À venir)
 
 #### 3.1 Pages de Détail
 - [ ] **Page Track (`/track/:id`)**
@@ -263,7 +288,7 @@
   - [ ] Filtres par type
   - [ ] Suggestions
 
-### Phase 4 : V4 - Optimisations
+### Phase 4 : V4 - Production (À venir)
 
 #### 4.1 Performance
 - [ ] **Lazy Loading**
@@ -309,24 +334,33 @@
 frontend/
 ├── src/
 │   ├── pages/              # Pages principales
-│   │   ├── Home.tsx        # Feed (à transformer)
+│   │   ├── Home.tsx        # ✅ Feed utilisateur
 │   │   ├── Login.tsx       # ✅ Connexion
 │   │   ├── Register.tsx    # ✅ Inscription
-│   │   ├── Profile.tsx     # ⏳ Profil utilisateur
-│   │   ├── Projects.tsx   # ⏳ Liste projets
-│   │   └── Upload.tsx      # ⏳ Upload track
+│   │   ├── Profile.tsx     # ✅ Profil utilisateur
+│   │   ├── Projects.tsx    # ✅ Liste projets
+│   │   └── Upload.tsx      # ✅ Upload track
 │   ├── components/         # Composants réutilisables
 │   │   ├── Layout.tsx      # ✅ Layout principal
 │   │   ├── AppSidebar.tsx  # ✅ Sidebar navigation
 │   │   ├── MusicPlayer.tsx # ✅ Player audio
-│   │   ├── login-form.tsx  # ✅ Formulaire login
-│   │   ├── register-form.tsx # ✅ Formulaire register
+│   │   ├── login-form.tsx  # ✅ Formulaire login (avec image)
+│   │   ├── register-form.tsx # ✅ Formulaire register (avec image)
 │   │   └── ui/             # Composants UI (shadcn)
+│   │       └── dialog.tsx  # ✅ Dialog/Modal
 │   ├── contexts/           # Contextes React
 │   │   └── AuthContext.tsx # ✅ Authentification
 │   ├── services/           # Services API
 │   │   ├── api.ts          # ✅ Service API base
-│   │   └── auth.ts         # ✅ Service auth
+│   │   ├── auth.ts         # ✅ Service auth
+│   │   ├── feed.ts         # ✅ Service feed
+│   │   ├── follows.ts      # ✅ Service follows
+│   │   ├── likes.ts        # ✅ Service likes
+│   │   ├── comments.ts     # ✅ Service comments
+│   │   ├── users.ts        # ✅ Service users
+│   │   ├── projects.ts     # ✅ Service projects
+│   │   ├── tracks.ts       # ✅ Service tracks
+│   │   └── files.ts        # ✅ Service files
 │   ├── lib/                # Utilitaires
 │   │   └── utils.ts        # ✅ Helpers
 │   ├── App.tsx             # ✅ Composant racine
@@ -362,13 +396,44 @@ npm run type-check
 
 ### Endpoints Utilisés
 
+**Authentification :**
 - `POST /auth/login` - Connexion
 - `POST /auth/register` - Inscription
+
+**Utilisateurs :**
 - `GET /users/:id` - Récupération utilisateur
-- `GET /projects` - Liste des projets (à implémenter)
-- `POST /projects` - Création de projet (à implémenter)
-- `GET /tracks` - Liste des tracks (à implémenter)
-- `POST /tracks` - Création de track (à implémenter)
+- `GET /users/:id/profile` - Profil complet avec stats
+
+**Projets :**
+- `GET /projects` - Liste des projets
+- `POST /projects` - Création de projet
+- `PUT /projects/:id` - Modification de projet
+- `DELETE /projects/:id` - Suppression de projet
+
+**Tracks :**
+- `GET /tracks` - Liste des tracks
+- `POST /tracks` - Création de track
+- `DELETE /tracks/:id` - Suppression de track
+
+**Fichiers :**
+- `POST /files/upload` - Upload de fichier audio
+- `GET /files/:id/download` - Téléchargement de fichier
+
+**Social :**
+- `POST /follows/:userId` - Suivre un utilisateur
+- `DELETE /follows/:userId` - Ne plus suivre
+- `GET /follows/:userId/status` - Statut de suivi
+- `GET /follows/:userId/followers` - Liste des followers
+- `GET /follows/:userId/following` - Liste des following
+- `POST /likes/:trackId` - Liker une track
+- `DELETE /likes/:trackId` - Unliker
+- `GET /likes/:trackId/status` - Statut de like
+- `GET /likes/:trackId/count` - Nombre de likes
+- `POST /comments` - Créer un commentaire
+- `PUT /comments/:id` - Modifier un commentaire
+- `DELETE /comments/:id` - Supprimer un commentaire
+- `GET /comments/track/:trackId` - Commentaires d'une track
+- `GET /feed` - Feed des tracks des utilisateurs suivis
 
 ### Configuration API
 
@@ -379,12 +444,11 @@ Le service API est configuré dans `src/services/api.ts` avec :
 
 ## 📋 Prochaines Étapes Immédiates
 
-1. **Créer la page Profile** avec header et sections
-2. **Créer le composant TrackCard** pour afficher les tracks
-3. **Créer la page Projects** avec liste et CRUD
-4. **Créer la page Upload** pour uploader des tracks
-5. **Transformer Home en Feed** avec timeline d'activité
-6. **Implémenter le système de follow** (backend + frontend)
+1. **Composants UI pour commentaires** - Modal/Dialog pour afficher et ajouter des commentaires
+2. **Recherche** - Page de recherche d'utilisateurs/tracks
+3. **Notifications** - Système de notifications pour likes/commentaires
+4. **Améliorations Feed** - Pagination infinie, filtres
+5. **Améliorations Profile** - Édition du profil, statistiques détaillées
 
 ## 🎯 Objectif V2
 
@@ -397,5 +461,5 @@ Transformer l'application en une plateforme sociale type SoundCloud où :
 ---
 
 **Dernière mise à jour :** Décembre 2024  
-**Version :** V1.0 (Base) → V2.0 (Social) en préparation
+**Version :** V2.0 (Social) - Phase 2 terminée
 

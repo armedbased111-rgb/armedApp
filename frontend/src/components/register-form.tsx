@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   Field,
   FieldDescription,
@@ -15,7 +16,10 @@ export function RegisterForm({
   ...props
 }: React.ComponentProps<"form">) {
   return (
-    <form className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={cn("flex flex-col gap-6 w-full", className)}>
+      <Card className="overflow-hidden w-full">
+        <CardContent className="grid p-0 md:grid-cols-[1fr_1fr]">
+          <form className={cn("p-6 md:p-8", className)} {...props}>
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
           <h1 className="text-2xl font-bold">Create an account</h1>
@@ -58,6 +62,20 @@ export function RegisterForm({
         </Field>
       </FieldGroup>
     </form>
+          <div className="relative hidden bg-muted md:block min-h-[300px]">
+            <img
+              src="/llogin.jpeg"
+              alt="Image"
+              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+            />
+          </div>
+        </CardContent>
+      </Card>
+      <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
+        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
+        and <a href="#">Privacy Policy</a>.
+      </div>
+    </div>
   )
 }
 

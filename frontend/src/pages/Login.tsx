@@ -30,7 +30,7 @@ export default function Login() {
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-5xl">
         {error && (
           <div className="mb-4 rounded-md bg-destructive/15 p-3 text-sm text-destructive">
             {error}
