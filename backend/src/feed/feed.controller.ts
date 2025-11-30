@@ -16,7 +16,9 @@ export class FeedController {
   ) {
     const limitNum = limit ? parseInt(limit, 10) : 20;
     const offsetNum = offset ? parseInt(offset, 10) : 0;
-    return this.feedService.getFeed(user.id, limitNum, offsetNum);
+    // Le JWT Strategy retourne { userId, email }
+    const userId = user.userId || user.id;
+    return this.feedService.getFeed(userId, limitNum, offsetNum);
   }
 }
 

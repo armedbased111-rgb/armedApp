@@ -22,7 +22,9 @@ export class CommentsController {
     @Body() createCommentDto: { trackId: string; content: string },
     @CurrentUser() user: any,
   ) {
-    return this.commentsService.create(user.id, createCommentDto.trackId, createCommentDto.content);
+    // Le JWT Strategy retourne { userId, email }
+    const userId = user.userId || user.id;
+    return this.commentsService.create(userId, createCommentDto.trackId, createCommentDto.content);
   }
 
   @Put(':id')
@@ -31,7 +33,9 @@ export class CommentsController {
     @Body() updateCommentDto: { content: string },
     @CurrentUser() user: any,
   ) {
-    return this.commentsService.update(id, user.id, updateCommentDto.content);
+    // Le JWT Strategy retourne { userId, email }
+    const userId = user.userId || user.id;
+    return this.commentsService.update(id, userId, updateCommentDto.content);
   }
 
   @Delete(':id')
@@ -39,7 +43,9 @@ export class CommentsController {
     @Param('id') id: string,
     @CurrentUser() user: any,
   ) {
-    await this.commentsService.delete(id, user.id);
+    // Le JWT Strategy retourne { userId, email }
+    const userId = user.userId || user.id;
+    await this.commentsService.delete(id, userId);
     return { message: 'Comment deleted successfully' };
   }
 

@@ -13,7 +13,9 @@ export class LikesController {
     @Param('trackId') trackId: string,
     @CurrentUser() user: any,
   ) {
-    return this.likesService.like(user.id, trackId);
+    // Le JWT Strategy retourne { userId, email }
+    const userId = user.userId || user.id;
+    return this.likesService.like(userId, trackId);
   }
 
   @Delete(':trackId')
@@ -21,7 +23,9 @@ export class LikesController {
     @Param('trackId') trackId: string,
     @CurrentUser() user: any,
   ) {
-    await this.likesService.unlike(user.id, trackId);
+    // Le JWT Strategy retourne { userId, email }
+    const userId = user.userId || user.id;
+    await this.likesService.unlike(userId, trackId);
     return { message: 'Unliked successfully' };
   }
 
@@ -30,7 +34,9 @@ export class LikesController {
     @Param('trackId') trackId: string,
     @CurrentUser() user: any,
   ) {
-    const isLiked = await this.likesService.isLiked(user.id, trackId);
+    // Le JWT Strategy retourne { userId, email }
+    const userId = user.userId || user.id;
+    const isLiked = await this.likesService.isLiked(userId, trackId);
     return { isLiked };
   }
 

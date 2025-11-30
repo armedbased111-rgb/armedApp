@@ -15,7 +15,7 @@
 - **HTTP Client** : Fetch API (via services)
 - **Desktop** : Electron (optionnel)
 
-## ✅ État Actuel - Version 2.0 (Phase 2 Social)
+## ✅ État Actuel - Version 2.1 (Phase 2 Social + Notifications)
 
 ### Infrastructure
 
@@ -70,10 +70,12 @@
 - ✅ Navigation entre pages
 - ✅ Gestion de l'authentification dans la sidebar
 
-#### 2. **AppSidebar**
-- ✅ Navigation principale
+#### 2. **AppSidebar / FloatingNav**
+- ✅ Navigation principale (floating navbar)
+- ✅ Recherche intégrée
 - ✅ Menu utilisateur
 - ✅ Déconnexion
+- ✅ Design responsive
 
 #### 3. **MusicPlayer**
 - ✅ Player audio global (style Apple-like)
@@ -170,6 +172,11 @@
 - ✅ Service pour upload de fichiers audio
 - ✅ Service pour téléchargement de fichiers
 
+#### 12. **search.ts**
+- ✅ Service pour recherche globale
+- ✅ Service pour recherche par type (users, tracks, projects)
+- ✅ Types SearchResult, SearchUser, SearchTrack, SearchProject
+
 ### Design System
 
 - ✅ **Tailwind CSS** configuré
@@ -251,6 +258,7 @@
   - [x] Système de commentaires sur les tracks
   - [x] CRUD commentaires (create, update, delete)
   - [x] Comptage des commentaires
+  - [x] Dialog de commentaires avec shadcn/ui ✅
   - [ ] Réponses aux commentaires
   - [ ] Mentions (@username)
 
@@ -258,6 +266,19 @@
   - [ ] Bouton repost
   - [ ] Liste des reposts
   - [ ] Attribution
+
+#### 2.4 Recherche et Navigation
+- [x] **Page Search (`/search`)**
+  - [x] Barre de recherche avec debounce
+  - [x] Résultats par tabs (Tout, Artistes, Tracks, Projets)
+  - [x] Affichage des résultats avec cards
+  - [x] Intégration avec backend de recherche ✅
+
+- [x] **Navbar Flottante**
+  - [x] Navigation principale flottante
+  - [x] Recherche intégrée dans la navbar
+  - [x] Design responsive (icônes mobile, texte desktop)
+  - [x] Affichage/masquage au scroll ✅
 
 ### Phase 3 : V3 - Avancé (À venir)
 
@@ -282,11 +303,11 @@
   - [ ] Filtres avancés
 
 #### 3.2 Recherche
-- [ ] **Page Search (`/search`)**
-  - [ ] Barre de recherche
-  - [ ] Résultats (tracks, artistes, projets)
-  - [ ] Filtres par type
-  - [ ] Suggestions
+- [x] **Page Search (`/search`)** ✅ Terminé
+  - [x] Barre de recherche
+  - [x] Résultats (tracks, artistes, projets)
+  - [x] Filtres par type (tabs)
+  - [ ] Suggestions (à venir)
 
 ### Phase 4 : V4 - Production (À venir)
 
@@ -302,10 +323,13 @@
   - [ ] Offline support
 
 #### 4.2 UX Améliorations
-- [ ] **Notifications**
-  - [ ] Système de notifications
-  - [ ] Notifications en temps réel
-  - [ ] Badge de notifications
+- [x] **Notifications** ✅
+  - [x] Système de notifications (service, context)
+  - [x] Notifications en temps réel (polling automatique)
+  - [x] Badge de notifications dans la navbar
+  - [x] Popover avec liste des notifications
+  - [x] Marquage comme lu / tout marquer comme lu
+  - [x] Types : LIKE, COMMENT, FOLLOW
 
 - [ ] **Animations**
   - [ ] Transitions de pages
@@ -444,11 +468,12 @@ Le service API est configuré dans `src/services/api.ts` avec :
 
 ## 📋 Prochaines Étapes Immédiates
 
-1. **Composants UI pour commentaires** - Modal/Dialog pour afficher et ajouter des commentaires
-2. **Recherche** - Page de recherche d'utilisateurs/tracks
-3. **Notifications** - Système de notifications pour likes/commentaires
-4. **Améliorations Feed** - Pagination infinie, filtres
-5. **Améliorations Profile** - Édition du profil, statistiques détaillées
+1. ~~**Composants UI pour commentaires**~~ ✅ Terminé - Dialog de commentaires avec shadcn/ui
+2. ~~**Recherche**~~ ✅ Terminé - Page de recherche complète avec tabs
+3. ~~**Navbar flottante**~~ ✅ Terminé - Navigation flottante avec recherche intégrée
+4. ~~**Notifications** - Système de notifications pour likes/commentaires~~ ✅ Terminé
+5. **Améliorations Feed** - Pagination infinie, filtres
+6. **Améliorations Profile** - Édition du profil, statistiques détaillées
 
 ## 🎯 Objectif V2
 

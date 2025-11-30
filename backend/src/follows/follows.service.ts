@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Follow } from '../entities/follow.entity';
 import { User } from '../entities/user.entity';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class FollowsService {
@@ -11,6 +12,8 @@ export class FollowsService {
         private followsRepository: Repository<Follow>,
         @InjectRepository(User)
         private usersRepository: Repository<User>,
+        @Inject(forwardRef(() => NotificationsService))
+        private notificationsService: NotificationsService,
     ) {}
 
       async follow(followerId: string, followingId: string): Promise<Follow> {
@@ -35,7 +38,17 @@ export class FollowsService {
 
     // Créer la relation
     const follow = this.followsRepository.create({ followerId, followingId });
-    return this.followsRepository.save(follow);
+    const savedFollow = await this.followsRepository.save(follow);
+
+    // Créer une notification pour l'utilisateur suivi
+    try {
+      await this.notificationsService.createFollowNotification(followerId, followingId);
+    } catch (error) {
+      // Ne pas faire échouer le follow si la notification échoue
+      console.error('Error creating follow notification:', error);
+    }
+
+    return savedFollow;
   }
 
     async unfollow(followerId: string, followingId: string): Promise<void> {

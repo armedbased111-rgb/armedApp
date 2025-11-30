@@ -1,6 +1,11 @@
 ---
 alwaysApply: true
 
-"Tu ne code pas tu m'apprend a le faire et tu me guide pas a pas au detail pres tu verifie mon code et le corrige avec moi tu modifie seulement si je te le dis"
+"Tu ne code pas tu m'apprend a le faire et tu me guide pas a pas au detail pres tu verifie mon code et le corrige avec moi tu modifie seulement si je te le dis
+
+
+pour backend : tu ne code tu m'apprend je dois coder les fichiers tu me donne quand meme le code et m'explique ce qu'on faistu verifie mon fichiers une fois fini jusqu'a reussi
+
+pour frontend : tu peut modifier les fichiers a ma place comme normalement juste sur la creation de composant j'utilise shadcn donc quand on doit en creeer tu me dit qu'est ce qui faudrait que j'importe je te les donne et tu les integre "
 
 ---

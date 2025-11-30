@@ -13,7 +13,9 @@ export class FollowsController {
         @Param('userId') userId: string,
         @CurrentUser() user: any,
     ) {
-        return this.followsService.follow(user.id, userId);
+        // Le JWT Strategy retourne { userId, email }
+        const currentUserId = user.userId || user.id;
+        return this.followsService.follow(currentUserId, userId);
     }
 
     @Delete(':userId')
@@ -21,7 +23,9 @@ export class FollowsController {
         @Param('userId') userId: string,
         @CurrentUser() user: any,
     ) {
-        await this.followsService.unfollow(user.id, userId);
+        // Le JWT Strategy retourne { userId, email }
+        const currentUserId = user.userId || user.id;
+        await this.followsService.unfollow(currentUserId, userId);
         return { message: 'unfollowed user'};
     }
     
@@ -30,7 +34,9 @@ export class FollowsController {
         @Param('userId') userId: string,
         @CurrentUser() user: any,
     ) {
-        const isFollowing = await this.followsService.isFollowing(user.id, userId);
+        // Le JWT Strategy retourne { userId, email }
+        const currentUserId = user.userId || user.id;
+        const isFollowing = await this.followsService.isFollowing(currentUserId, userId);
         return { isFollowing };
     }
 

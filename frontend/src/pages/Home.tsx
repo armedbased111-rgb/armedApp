@@ -2,8 +2,11 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogClose } from '@/components/ui/dialog';
 import { LoginForm } from '@/components/login-form';
+import { CommentsDialog } from '@/components/CommentsDialog';
+import { FeedTrackPlayer } from '@/components/FeedTrackPlayer';
+import { AudioPlayerProvider } from '@/components/ui/elevenlabs-audio-player';
 import { feedService } from '../services/feed';
 import type { FeedTrack } from '../services/feed';
 import { likesService } from '../services/likes';
@@ -15,8 +18,9 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loginError, setLoginError] = useState('');
-  const [loginLoading, setLoginLoading] = useState(false);
   const [showLoginDialog, setShowLoginDialog] = useState(false);
+  const [commentsDialogOpen, setCommentsDialogOpen] = useState(false);
+  const [selectedTrack, setSelectedTrack] = useState<FeedTrack | null>(null);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -60,17 +64,9 @@ export default function Home() {
     }
   };
 
-  const formatDuration = (seconds?: number) => {
-    if (!seconds) return '--:--';
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
-
   const handleLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoginError('');
-    setLoginLoading(true);
 
     const formData = new FormData(e.currentTarget);
     const email = formData.get('email') as string;
@@ -81,8 +77,6 @@ export default function Home() {
       setShowLoginDialog(false);
     } catch (err: any) {
       setLoginError(err.message || 'Erreur de connexion');
-    } finally {
-      setLoginLoading(false);
     }
   };
 
@@ -129,6 +123,7 @@ export default function Home() {
   }
 
   return (
+    <AudioPlayerProvider>
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Feed</h1>
@@ -200,9 +195,10 @@ export default function Home() {
 
               {/* Info track */}
               <div className="mb-4">
-                <h3 className="text-lg font-semibold mb-1">{track.name}</h3>
+                <h3 className="text-lg font-semibold mb-3">{track.name}</h3>
+                {/* Audio Player */}
+                <FeedTrackPlayer track={track} className="mb-3" />
                 <div className="flex items-center gap-4 text-sm text-neutral-600 dark:text-neutral-400">
-                  <span>{formatDuration(track.duration)}</span>
                   {track.fileSize && (
                     <span>{(track.fileSize / 1024 / 1024).toFixed(2)} MB</span>
                   )}
@@ -222,7 +218,13 @@ export default function Home() {
                   <Heart className={`w-5 h-5 ${track.isLiked ? 'fill-current' : ''}`} />
                   <span>{track.likeCount}</span>
                 </button>
-                <button className="flex items-center gap-2 px-3 py-2 rounded-lg text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors">
+                <button
+                  onClick={() => {
+                    setSelectedTrack(track);
+                    setCommentsDialogOpen(true);
+                  }}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors"
+                >
                   <MessageCircle className="w-5 h-5" />
                   <span>{track.commentCount}</span>
                 </button>
@@ -231,6 +233,21 @@ export default function Home() {
           ))}
         </div>
       )}
+
+      {/* Dialog de commentaires */}
+      {selectedTrack && (
+        <CommentsDialog
+          trackId={selectedTrack.id}
+          trackName={selectedTrack.name}
+          open={commentsDialogOpen}
+          onOpenChange={setCommentsDialogOpen}
+          onCommentAdded={() => {
+            // Recharger le feed pour mettre à jour le compteur de commentaires
+            loadFeed();
+          }}
+        />
+      )}
     </div>
+    </AudioPlayerProvider>
   );
 }

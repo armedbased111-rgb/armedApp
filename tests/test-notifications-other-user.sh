@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# Script pour tester les notifications avec un autre utilisateur
+# Il faut se connecter avec un compte différent pour liker/commenter une track d'un autre utilisateur
+
+echo "⚠️  Pour tester les notifications LIKE/COMMENT, il faut :"
+echo "1. Se connecter avec un compte DIFFÉRENT (pas zxran@gmail.com)"
+echo "2. Liker/Commenter une track qui appartient à zxran@gmail.com"
+echo ""
+echo "📋 Étapes :"
+echo ""
+echo "1. Connecte-toi avec un autre compte (ex: hidn@gmail.com)"
+echo "   curl -X POST http://localhost:3000/auth/login \\"
+echo "     -H \"Content-Type: application/json\" \\"
+echo "     -d '{\"email\": \"hidn@gmail.com\", \"password\": \"ton-password\"}'"
+echo ""
+echo "2. Copie le access_token de la réponse"
+echo ""
+echo "3. Utilise ce token pour liker/commenter la track de zxran :"
+echo "   TRACK_ID=\"05c44cfa-2cd9-4d69-a9b6-e301905a6869\""
+echo "   TOKEN=\"ton-nouveau-token\""
+echo ""
+echo "   # Like"
+echo "   curl -X POST http://localhost:3000/likes/\$TRACK_ID \\"
+echo "     -H \"Authorization: Bearer \$TOKEN\""
+echo ""
+echo "   # Comment"
+echo "   curl -X POST http://localhost:3000/comments \\"
+echo "     -H \"Authorization: Bearer \$TOKEN\" \\"
+echo "     -H \"Content-Type: application/json\" \\"
+echo "     -d '{\"trackId\": \"\$TRACK_ID\", \"content\": \"Super track !\"}'"
+echo ""
+echo "4. Vérifie les notifications avec le compte de zxran (le propriétaire de la track)"
+echo "   curl -X GET \"http://localhost:3000/notifications?limit=50\" \\"
+echo "     -H \"Authorization: Bearer TOKEN_DE_ZXRAN\""
+echo ""
+echo "✅ Les notifications devraient apparaître dans le compte de zxran !"
+

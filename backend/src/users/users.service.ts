@@ -30,12 +30,24 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
+  async update(id: string, updateData: Partial<User>): Promise<User> {
+  await this.usersRepository.update(id, updateData);
+  const updatedUser = await this.findById(id);
+  if (!updatedUser) {
+    throw new NotFoundException('User not found');
+  }
+  return updatedUser;
+}
+
   async findByEmail(email: string): Promise<User | null> {
     return this.usersRepository.findOne({ where: { email } });
   }
 
   async findById(id: string): Promise<User | null> {
     return this.usersRepository.findOne({ where: { id } });
+  }
+  async findByEmailVerificationToken(token: string): Promise<User | null> {
+    return this.usersRepository.findOne({ where: { emailVerificationToken: token } });
   }
 
   async getProfile(userId: string, currentUserId?: string) {

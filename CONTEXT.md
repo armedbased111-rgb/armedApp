@@ -60,16 +60,19 @@ armedApp/
 
 #### **Autres Pages Clés**
 - `/discover` : Exploration et découverte de nouveaux artistes
-- `/upload` : Upload de tracks et création de projets
+- `/upload` : Upload de tracks et création de projets ✅
 - `/project/:id` : Page détail d'un projet/EP
 - `/track/:id` : Page détail d'une track (waveform, commentaires, stats)
-- `/search` : Recherche d'artistes, tracks, projets
+- `/search` : Recherche d'artistes, tracks, projets ✅
+- **Notifications** : Popover dans la navbar avec compteur de non lues ✅
+- **Notifications** : Popover dans la navbar avec compteur de non lues ✅
 
 ### Fonctionnalités Sociales
 
 - **Follow/Unfollow** : Suivre des artistes ✅
 - **Likes/Favorites** : Ajouter des tracks aux favoris ✅
 - **Commentaires** : Commenter sur les tracks ✅
+- **Notifications** : Système de notifications en temps réel (LIKE, COMMENT, FOLLOW) ✅
 - **Reposts** : Partager des tracks (à venir)
 - **Playlists** : Créer et partager des playlists (à venir)
 - **Partage** : Partager vers les réseaux sociaux (à venir)
@@ -117,6 +120,12 @@ Like
 Comment
   ├── user (User)
   └── track (Track)
+
+Notification
+  ├── user (User) - Destinataire
+  ├── actor (User) - Qui a fait l'action
+  ├── type (LIKE | COMMENT | FOLLOW)
+  └── target (Track | null) - Track concernée (null pour FOLLOW)
 ```
 
 ## 🎨 Design & UX
@@ -155,12 +164,13 @@ Comment
 - [x] Système de follow/unfollow
 - [x] Likes et favorites
 - [x] Commentaires sur tracks
-- [ ] Recherche et découverte
+- [x] Recherche et découverte ✅
+- [x] Navbar flottante avec recherche intégrée ✅
 
 ### Phase 3 : V3 - Avancé
+- [x] Notifications (LIKE, COMMENT, FOLLOW) ✅
 - [ ] Playlists
 - [ ] Partage social
-- [ ] Notifications
 - [ ] Collaboration (multi-utilisateurs sur projets)
 - [ ] Intégration DAW (lancement de projets)
 
@@ -196,8 +206,8 @@ Comment
 
 ---
 
-**Dernière mise à jour :** Décembre 2024  
-**Version actuelle :** V2.0 (Frontend) - V2.0 (Backend) - Phase 2 Social terminée
+**Dernière mise à jour :** Novembre 2024  
+**Version actuelle :** V2.1 (Frontend) - V2.1 (Backend) - Phase 2 Social + Notifications terminées
 
 ## 📝 État Actuel du Projet
 
@@ -218,11 +228,24 @@ Comment
 - Commentaires sur tracks
 - Dialog de connexion
 - Services API complets (feed, follows, likes, comments, users)
+- Recherche d'utilisateurs/tracks
+- Navbar flottante avec recherche intégrée
+
+### Phase 3 (V3 Notifications) — ✅ Terminée
+- Système de notifications backend (entity, service, controller)
+- Système de notifications frontend (service, context, UI)
+- Notifications LIKE (quand quelqu'un like ta track)
+- Notifications COMMENT (quand quelqu'un commente ta track)
+- Notifications FOLLOW (quand quelqu'un te suit)
+- Polling automatique (compteur toutes les 10s, notifications toutes les 30s)
+- Popover UI avec badge de compteur et liste des notifications
+- Marquage comme lu / tout marquer comme lu
 
 ### Prochaines Étapes
-1. Composants UI pour commentaires (affichage et création)
-2. Recherche d'utilisateurs/tracks
-3. Notifications
+1. ~~Composants UI pour commentaires (affichage et création)~~ ✅ Terminé
+2. ~~Recherche d'utilisateurs/tracks~~ ✅ Terminé
+3. ~~Notifications (LIKE, COMMENT, FOLLOW)~~ ✅ Terminé
 4. Améliorations Feed (pagination infinie, filtres)
 5. Améliorations Profile (édition, statistiques détaillées)
+6. ~~Navbar flottante avec recherche intégrée~~ ✅ Terminé
 

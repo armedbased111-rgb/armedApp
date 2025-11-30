@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Comment } from '../entities/comment.entity';
 import { Track } from '../entities/track.entity';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class CommentsService {
@@ -11,6 +12,8 @@ export class CommentsService {
     private commentsRepository: Repository<Comment>,
     @InjectRepository(Track)
     private tracksRepository: Repository<Track>,
+    @Inject(forwardRef(() => NotificationsService))
+    private notificationsService: NotificationsService,
   ) {}
 
   async create(userId: string, trackId: string, content: string): Promise<Comment> {
@@ -31,7 +34,23 @@ export class CommentsService {
       trackId,
       content: content.trim(),
     });
-    return this.commentsRepository.save(comment);
+    const savedComment = await this.commentsRepository.save(comment);
+
+    // Créer une notification pour le propriétaire de la track
+    try {
+      console.log('CommentsService: Attempting to create notification', { userId, trackId });
+      const notification = await this.notificationsService.createCommentNotification(userId, trackId);
+      if (notification) {
+        console.log('CommentsService: Notification created successfully', { notificationId: notification.id });
+      } else {
+        console.log('CommentsService: Notification creation returned null');
+      }
+    } catch (error) {
+      // Ne pas faire échouer le commentaire si la notification échoue
+      console.error('CommentsService: Error creating comment notification:', error);
+    }
+
+    return savedComment;
   }
 
   async update(commentId: string, userId: string, content: string): Promise<Comment> {

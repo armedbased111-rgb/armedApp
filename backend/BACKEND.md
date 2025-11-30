@@ -17,7 +17,7 @@
 - **Authentification** : JWT (JSON Web Tokens)
 - **Port** : 3000 (par défaut)
 
-## ✅ État Actuel - Version 2.0 (Phase 2 Social)
+## ✅ État Actuel - Version 2.1 (Phase 2 Social + Notifications)
 
 ### Infrastructure
 
@@ -35,16 +35,48 @@
 - ✅ JWT Strategy configurée
 - ✅ Guards JWT pour protéger les endpoints
 - ✅ Hashage des mots de passe avec bcrypt
+- ✅ Refresh tokens pour renouveler les access tokens
+- ✅ Endpoint de déconnexion
+- ✅ Gestion des sessions utilisateur (IP, User-Agent, historique)
+- ✅ Validation d'email avec token de vérification
 
 **Endpoints :**
 ```
 POST /auth/register
 Body: { email, password, name? }
-Response: { access_token, user }
+Response: { access_token, refresh_token, user }
 
 POST /auth/login
 Body: { email, password }
-Response: { access_token, user }
+Response: { access_token, refresh_token, user }
+
+POST /auth/refresh
+Body: { refresh_token }
+Response: { access_token }
+
+POST /auth/logout
+Body: { refresh_token }
+Response: { message: string }
+
+GET /auth/sessions
+Headers: Authorization: Bearer <token>
+Response: Session[] (avec id, ipAddress, userAgent, createdAt, lastUsedAt, expiresAt, isExpired)
+
+DELETE /auth/sessions/:sessionId
+Headers: Authorization: Bearer <token>
+Response: { message: string }
+
+DELETE /auth/sessions
+Headers: Authorization: Bearer <token>
+Body: { currentSessionId: string }
+Response: { message: string }
+
+GET /auth/verify-email/:token
+Response: { message: string }
+
+POST /auth/resend-verification
+Body: { email: string }
+Response: { message: string, token: string }
 ```
 
 #### 2. **UsersModule** - Gestion des Utilisateurs
@@ -247,17 +279,77 @@ Response: { count: number }
 #### 9. **FeedModule** - Feed Utilisateur
 - ✅ Feed des tracks des utilisateurs suivis (protégé par JWT)
 - ✅ Pagination (limit, offset)
-- ✅ Stats par track (likes, commentaires, isLiked)
+
+#### 10. **NotificationsModule** - Système de Notifications
+- ✅ Création automatique de notifications (LIKE, COMMENT, FOLLOW)
+- ✅ Récupération des notifications par utilisateur
+- ✅ Compteur de notifications non lues
+- ✅ Marquage comme lu / tout marquer comme lu
+- ✅ Intégration dans les services likes, comments, follows
 
 **Endpoints :**
 ```
-GET /feed?limit=20&offset=0
+GET /notifications
+Headers: Authorization: Bearer <token>
+Query: ?limit=20&offset=0&unreadOnly=false
+Response: { notifications: Notification[], total: number }
+
+GET /notifications/unread-count
+Headers: Authorization: Bearer <token>
+Response: { count: number }
+
+PUT /notifications/:id/read
+Headers: Authorization: Bearer <token>
+Response: Notification
+
+PUT /notifications/read-all
+Headers: Authorization: Bearer <token>
+Response: { message: string }
+```
+
+**Types de notifications :**
+- `LIKE` : Quand quelqu'un like ta track
+- `COMMENT` : Quand quelqu'un commente ta track
+- `FOLLOW` : Quand quelqu'un te suit
+
+#### 10. **SearchModule** - Recherche
+- ✅ Recherche globale (users, tracks, projects)
+- ✅ Recherche par type (users, tracks, projects)
+- ✅ Recherche insensible à la casse (ILIKE)
+- ✅ Limite de résultats configurable
+
+**Endpoints :**
+```
+GET /search?q=query&type=users&limit=10
+Headers: Authorization: Bearer <token>
+Response: { users: User[], tracks: Track[], projects: Project[] }
+```
+
+#### 10. **SearchModule** - Recherche
+- ✅ Recherche globale (users, tracks, projects) (protégé par JWT)
+- ✅ Recherche par type (users, tracks, projects) (protégé par JWT)
+
+**Endpoints :**
+```
+GET /search?q=<query>&limit=20
 Headers: Authorization: Bearer <token>
 Response: {
+  users: User[],
   tracks: Track[],
-  total: number,
-  hasMore: boolean
+  projects: Project[]
 }
+
+GET /search/users?q=<query>&limit=20
+Headers: Authorization: Bearer <token>
+Response: User[]
+
+GET /search/tracks?q=<query>&limit=20
+Headers: Authorization: Bearer <token>
+Response: Track[]
+
+GET /search/projects?q=<query>&limit=20
+Headers: Authorization: Bearer <token>
+Response: Project[]
 ```
 
 ### Modèles de Données (Entités)
@@ -272,6 +364,9 @@ Response: {
   username: string (nullable, unique)
   avatar: string (nullable)
   bio: string (nullable)
+  emailVerified: boolean (default: false)
+  emailVerificationToken: string (nullable)
+  emailVerificationTokenExpires: Date (nullable)
   createdAt: Date
 }
 ```
@@ -387,10 +482,10 @@ JWT_SECRET=ton-secret-super-securise-change-en-production
 
 ### Phase 3 : Amélioration de l'Authentification
 
-- [ ] Refresh tokens pour renouveler les tokens JWT
-- [ ] Endpoint de déconnexion
-- [ ] Gestion des sessions utilisateur
-- [ ] Validation d'email (optionnel)
+- [x] Refresh tokens pour renouveler les tokens JWT
+- [x] Endpoint de déconnexion
+- [x] Gestion des sessions utilisateur
+- [x] Validation d'email (optionnel)
 - [ ] Réinitialisation de mot de passe
 - [ ] OAuth (Google, etc.) - optionnel
 
@@ -446,7 +541,7 @@ JWT_SECRET=ton-secret-super-securise-change-en-production
 
 - [ ] Système de permissions (owner, collaborator, viewer)
 - [ ] Commentaires sur les projets/tracks
-- [ ] Notifications en temps réel
+- [x] Notifications en temps réel ✅
 - [ ] Historique des modifications
 - [ ] Versioning des projets
 
@@ -533,8 +628,8 @@ npm run lint
 - Endpoint profil utilisateur avec stats
 
 ### Prochaines Étapes
-1. Recherche d'utilisateurs/tracks
-2. Notifications
+1. ~~Recherche d'utilisateurs/tracks~~ ✅ Terminé - SearchModule complet
+2. ~~Notifications~~ ✅ Terminé
 3. Améliorations Feed (filtres, recommandations)
 4. DTOs et validation (class-validator)
 5. Gestion d'erreurs centralisée

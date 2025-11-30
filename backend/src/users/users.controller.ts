@@ -34,6 +34,8 @@ export class UsersController {
     @Param('id') id: string,
     @CurrentUser() user: any,
   ) {
-    return this.usersService.getProfile(id, user.id);
+    // Le JWT Strategy retourne { userId, email }
+    const currentUserId = user.userId || user.id;
+    return this.usersService.getProfile(id, currentUserId);
   }
 }

@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Like } from '../entities/like.entity';
 import { Track } from '../entities/track.entity';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class LikesService {
@@ -11,6 +12,8 @@ export class LikesService {
     private likesRepository: Repository<Like>,
     @InjectRepository(Track)
     private tracksRepository: Repository<Track>,
+    @Inject(forwardRef(() => NotificationsService))
+    private notificationsService: NotificationsService,
   ) {}
 
   async like(userId: string, trackId: string): Promise<Like> {
@@ -30,7 +33,23 @@ export class LikesService {
 
     // Créer le like
     const like = this.likesRepository.create({ userId, trackId });
-    return this.likesRepository.save(like);
+    const savedLike = await this.likesRepository.save(like);
+
+    // Créer une notification pour le propriétaire de la track
+    try {
+      console.log('LikesService: Attempting to create notification', { userId, trackId });
+      const notification = await this.notificationsService.createLikeNotification(userId, trackId);
+      if (notification) {
+        console.log('LikesService: Notification created successfully', { notificationId: notification.id });
+      } else {
+        console.log('LikesService: Notification creation returned null');
+      }
+    } catch (error) {
+      // Ne pas faire échouer le like si la notification échoue
+      console.error('LikesService: Error creating like notification:', error);
+    }
+
+    return savedLike;
   }
 
   async unlike(userId: string, trackId: string): Promise<void> {
