@@ -240,4 +240,74 @@ async resendVerificationEmail(email: string) {
     token: verificationToken, // À retirer quand on aura un vrai service d'email
   };
 }
+async requestPasswordReset(email: string) {
+    const user = await this.usersService.findByEmail(email);
+    if (!user) {
+        return { message: 'If that email is registered, a password reset link has been sent.' };
+    }
+    const resetToken = randomBytes(32).toString('hex');
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + 1);
+    await this.usersService.update(user.id, {
+        passwordResetToken: resetToken,
+        passwordResetTokenExpires: expiresAt,
+    });
+    return { 
+        message: 'Password reset link has been sent.',
+        token: resetToken, // À retirer quand on aura un vrai service d'email
+    };
+}
+async resetPassword(token: string, newPassword: string) {
+    const user = await this.usersService.findByPasswordResetToken(token);
+    if (!user) {
+        throw new UnauthorizedException('Invalid password reset token');
+    }
+    if (user.passwordResetTokenExpires && new Date() > user.passwordResetTokenExpires) {
+        throw new UnauthorizedException('Password reset token expired');
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await this.usersService.update(user.id, {
+        password: hashedPassword,
+        passwordResetToken: null,
+        passwordResetTokenExpires: null,
+    });
+    return { message: 'Password has been reset successfully' };
+}
+async googleLogin(user: any, ipAddress?: string, userAgent?: string) {
+  if (!user || !user.email) {
+    throw new UnauthorizedException('Invalid Google user data');
+  }
+
+  // Chercher si l'utilisateur existe déjà
+  let dbUser = await this.usersService.findByEmail(user.email);
+
+  if (!dbUser) {
+    // Créer un nouvel utilisateur avec Google
+    const name = user.firstName && user.lastName 
+      ? `${user.firstName} ${user.lastName}` 
+      : user.firstName || user.lastName || null;
+    
+    dbUser = await this.usersService.create(
+      user.email,
+      '', // Pas de mot de passe pour les utilisateurs OAuth
+      name,
+    );
+
+    // Marquer l'email comme vérifié (Google l'a déjà vérifié)
+    await this.usersService.update(dbUser.id, {
+      emailVerified: true,
+      avatar: user.picture || null,
+    });
+  } else {
+    // Mettre à jour l'avatar si nécessaire
+    if (user.picture && !dbUser.avatar) {
+      await this.usersService.update(dbUser.id, {
+        avatar: user.picture,
+      });
+    }
+  }
+
+  const { password: _, ...result } = dbUser;
+  return this.generateTokens(result, ipAddress, userAgent);
+}
 }

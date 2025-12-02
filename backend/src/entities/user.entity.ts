@@ -37,4 +37,8 @@ export class User {
   emailVerificationToken: string | null;
   @Column({ nullable: true, type: 'timestamp' })
   emailVerificationTokenExpires: Date | null;
+  @Column({ type: 'varchar', nullable: true })
+  passwordResetToken: string | null;
+  @Column({ nullable: true, type: 'timestamp' })
+  passwordResetTokenExpires: Date | null;
 }

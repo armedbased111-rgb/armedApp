@@ -47,7 +47,17 @@ export class UsersService {
     return this.usersRepository.findOne({ where: { id } });
   }
   async findByEmailVerificationToken(token: string): Promise<User | null> {
-    return this.usersRepository.findOne({ where: { emailVerificationToken: token } });
+    return this.usersRepository.findOne({ 
+        where: { emailVerificationToken: token } 
+    });
+  }
+
+  async findByPasswordResetToken(token: string): Promise<User | null> {
+    return this.usersRepository.findOne({ where: { passwordResetToken: token } });
+  }
+
+  async findbyPasswordResetToken(token: string): Promise<User | null> {
+    return this.usersRepository.findOne({ where: { passwordResetToken: token } });
   }
 
   async getProfile(userId: string, currentUserId?: string) {

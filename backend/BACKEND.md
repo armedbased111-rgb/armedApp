@@ -39,6 +39,8 @@
 - ✅ Endpoint de déconnexion
 - ✅ Gestion des sessions utilisateur (IP, User-Agent, historique)
 - ✅ Validation d'email avec token de vérification
+- ✅ Réinitialisation de mot de passe avec token sécurisé
+- ✅ OAuth Google (connexion avec compte Google)
 
 **Endpoints :**
 ```
@@ -77,6 +79,21 @@ Response: { message: string }
 POST /auth/resend-verification
 Body: { email: string }
 Response: { message: string, token: string }
+
+POST /auth/forgot-password
+Body: { email: string }
+Response: { message: string, token: string }
+
+POST /auth/reset-password
+Body: { token: string, newPassword: string }
+Response: { message: string }
+
+GET /auth/google
+Redirects to Google OAuth login page
+
+GET /auth/google/callback
+Callback URL after Google authentication
+Response: { access_token, refresh_token, user }
 ```
 
 #### 2. **UsersModule** - Gestion des Utilisateurs
@@ -367,6 +384,8 @@ Response: Project[]
   emailVerified: boolean (default: false)
   emailVerificationToken: string (nullable)
   emailVerificationTokenExpires: Date (nullable)
+  passwordResetToken: string (nullable)
+  passwordResetTokenExpires: Date (nullable)
   createdAt: Date
 }
 ```
@@ -486,8 +505,8 @@ JWT_SECRET=ton-secret-super-securise-change-en-production
 - [x] Endpoint de déconnexion
 - [x] Gestion des sessions utilisateur
 - [x] Validation d'email (optionnel)
-- [ ] Réinitialisation de mot de passe
-- [ ] OAuth (Google, etc.) - optionnel
+- [x] Réinitialisation de mot de passe
+- [x] OAuth (Google) - optionnel
 
 ### Phase 4 : Fonctionnalités Avancées
 

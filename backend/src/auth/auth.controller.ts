@@ -1,6 +1,7 @@
 import { Controller, Post, Body, UnauthorizedException, Request, Get, Delete, Param, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -99,11 +100,39 @@ export class AuthController {
         return this.authService.verifyEmail(token);
     }
 
+    @Post('forgot-password')
+    async forgotPassword(@Body() body: { email: string }) {
+        if (!body.email) {
+            throw new UnauthorizedException('Email is required');
+        }
+        return this.authService.requestPasswordReset(body.email);
+    }
+
+    @Post('reset-password')
+    async resetPassword(@Body() body: { token: string; newPassword: string }) {
+        if (!body.token || !body.newPassword) {
+            throw new UnauthorizedException('Token and new password are required');
+        }
+        return this.authService.resetPassword(body.token, body.newPassword);
+    }
+
     @Post('resend-verification')
 async resendVerification(@Body() body: { email: string }) {
   if (!body.email) {
     throw new UnauthorizedException('Email is required');
   }
   return this.authService.resendVerificationEmail(body.email);
+}
+@Get('google')
+    @UseGuards(AuthGuard('google'))
+    async googleAuth() {
+
+    }
+   @Get('google/callback')
+@UseGuards(AuthGuard('google'))
+async googleAuthRedirect(@Request() req) {
+  const ipAddress = req.ip || req.connection?.remoteAddress || 'unknown';
+  const userAgent = req.headers['user-agent'] || 'unknown';
+  return this.authService.googleLogin(req.user, ipAddress, userAgent);
 }
 }
